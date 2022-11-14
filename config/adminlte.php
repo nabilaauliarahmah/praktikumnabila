@@ -290,7 +290,13 @@ return [
     */
 
     'menu' => [
-        // Navbar items:
+        // Navbar items
+        [
+            'text' => 'Buku',
+            'url' => 'admin/book',
+            'icon' => 'fas fa-fw fa-book',
+            'can' => 'isAdmin',
+        ],
         [
             'type'         => 'navbar-search',
             'text'         => 'search',
