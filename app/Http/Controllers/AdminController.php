@@ -123,4 +123,11 @@ class AdminController extends Controller
             'message' => $message,
         ]);
     }
+
+    public function print_books() {
+        $books = Book::all();
+
+        $pdf = PDF::loadview('print_books', ['books' => $books]);
+        return $pdf->download('data_buku.pdf');
+    }
 }

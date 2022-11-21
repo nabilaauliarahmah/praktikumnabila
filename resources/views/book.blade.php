@@ -12,6 +12,7 @@
         <div class="card-header">{{ __('Pengelolaan Buku')}} </div>
         <div class="card-body">
             <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal"><i class="fa fa-plus"></i>Tambah Data</button>
+            <a href="{{ route('admin.print.books') }}" target="__blank" class="btn btn-secondary"><i class="fa fa-print"></i>Cetak PDF</a>
             </hr>
             <table id="table-data" class="table table-bordered">
                 <thead>
@@ -189,8 +190,8 @@
 
         });
 
-        function deleteConfirmation(id, judul) {
-            Swal.fire({
+        function deleteConfirmation(npm, judul) {
+            swal.fire({
                 title: "Hapus?",
                 type: 'warning',
                 text: "Apakah anda yakin akan menghapus data buku dengan judul " + judul+"?!",
@@ -206,7 +207,7 @@
 
                     $.ajax({
                         type: 'POST',
-                        url: "{{url('/admin/book/delete')}}/" + id,
+                        url: "{{url('/admin/book/delete/id')}}/" + npm,
                         data: {_token: CSRF_TOKEN},
                         dataType: 'JSON',
                         success: function (results) {
