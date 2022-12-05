@@ -86,6 +86,7 @@
         <script src="{{ asset('vendor/jquery/jquery.min.js') }}"></script>
         <script src="{{ asset('vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
         <script src="{{ asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js') }}"></script>
+        <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
         {{-- Configured Scripts --}}
         @include('adminlte::plugins', ['type' => 'js'])
@@ -114,7 +115,6 @@
             showConfirmButton: false,
             timer: 3000,
 	    })
-
         @if(Session::has('message'))
             var type = "{{Session::get('alert-type')}}";
             
@@ -153,7 +153,6 @@
                 break;
             }
         @endif
-
         @if ($errors->any())
             @foreach($errors->all() as $error)
 		        Swal.fire({
@@ -163,7 +162,6 @@
                 })
             @endforeach
 	    @endif
-
         @if ($errors->any())
             Swal.fire({
                 icon: 'error',
@@ -171,13 +169,10 @@
                 text: "Terjadi suatu kesalahan",
             })
 	    @endif
-
         $('#table-data').DataTable();
             
         let baseurl = "<?=url('/')?>";
         let fullURL = "<?=url()->full()?>";
-
-
     </script>
 
 </body>

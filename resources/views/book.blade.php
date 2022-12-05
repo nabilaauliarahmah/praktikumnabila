@@ -8,22 +8,24 @@
 
 @section('content')
 <div class="container-fluid">
-    <div class="card card-default">
-        <div class="card-header">{{ __('Pengelolaan Buku')}} </div>
-        <div class="card-body">
-            <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal"><i class="fa fa-plus"></i>Tambah Data</button>
-            <a href="{{ route('admin.print.books') }}" target="__blank" class="btn btn-secondary"><i class="fa fa-print"></i>Cetak PDF</a>
-            </hr>
+	<div class="card card-default">
+		<div class="card-header">{{ __('Pengelolaan Buku') }}</div>
+		<div class="card-body">
+            <!-- Button Tambah Data -->
+            <button class="btn btn-primary" data-toggle="modal" data-target="#tambahBukuModal"><i class="fa fa-plus"></i> Tambah Data</button>
+            <a href="{{ route('admin.print.books') }}" target="_blank" class="btn btn-secondary"><i class="fa fa-print"></i> Cetak PDF</a>
+	        <hr/>
+ 
             <table id="table-data" class="table table-bordered">
                 <thead>
                     <tr class="text-center">
                         <th>NO</th>
-                        <th>JUDUL</th>
-                        <th>PENULIS</th>
-                        <th>TAHUN</th>
-                        <th>PENERBIT</th>
-                        <th>COVER</th>
-                        <th>AKSI</th>
+                                        <th>JUDUL</th>
+                                        <th>PENULIS</th>
+                                        <th>TAHUN</th>
+                                        <th>PENERBIT</th>
+                                        <th>COVER</th>
+                                        <th>AKSI</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,17 +39,18 @@
                         <td>{{$book->penerbit}}</td>
                         <td>
                             @if($book->cover !== null)
-                            <img src="{{ asset('storage/cover_buku/'.$book->cover) }}" width="100px"/>
+                                <img src="{{ asset('storage/cover_buku/'.$book->cover) }}" width="100px"/>
                             @else
-                            [Gambar tidak tersedia]
+                                [Gambar tidak tersedia]
                             @endif
                         </td>
                         <td>
                             <div class="btn-group" role="group" aria-label="Basic example">
-                                <button type="button" id="btn-edit-buku" class="btn btn-success" data-toggle="modal"
-                                data-target="#editBukuModal" data-id="{{$book->id}}">Edit</button>
-                                <button type="button" class="btn btn-danger" onclick="deleteConfirmation('{{$book->id}}',
-                                '{{$book->judul}}' )">Hapus</button>
+                                <button type="button" id="btn-edit-buku" class="btn btn-success"
+                                    data-toggle="modal" data-target="#editBukuModal"
+                                    data-id="{{ $book->id }}">Edit</button>
+                                <button type="button" class="btn btn-danger"
+                                    onclick="deleteConfirmation('{{ $book->id }}', '{{ $book->judul }}' )">Hapus</button>
                             </div>
                         </td>
                     </tr>
@@ -58,6 +61,9 @@
     </div>
 </div>
 
+<!-- PERMODALAN -->
+
+<!-- TAMBAH DATA -->
 <div class="modal fade" id="tambahBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -101,6 +107,7 @@
     </div>
 </div>
 
+<!-- UBAH DATA -->
 <div class="modal fade" id="editBukuModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -140,7 +147,7 @@
                                 <input type="file" class="form-control" name="cover" id="edit-cover"/>
                             </div>
                         </div>
-                    </div>   
+                    </div>
             </div>
             <div class="modal-footer">
                 <input type="hidden" name="id" id="edit-id"/>
@@ -157,14 +164,11 @@
 
 @section('js')
     <script>
-
+        //EDIT
         $(function(){
-            
             $(document).on('click', '#btn-edit-buku', function(){
                 let id = $(this).data('id');
-
                 $('#image-area').empty();
-                
                 $.ajax({
                     type: "get",
                     url: "{{url('/admin/ajaxadmin/dataBuku')}}/"+id,
@@ -176,10 +180,9 @@
                         $('#edit-tahun').val(res.tahun);
                         $('#edit-id').val(res.id);
                         $('#edit-old-cover').val(res.cover);
-
                         if (res.cover !== null) {
                             $('#image-area').append(
-                                "<img src='"+baseurl+"/storage/cover_buku/"+res.cover+"' width='200px'/>" 
+                                "<img src='"+baseurl+"/storage/cover_buku/"+res.cover+"' width='200px'/>"
                             );
                         } else {
                             $('#image-area').append('[Gambar tidak tersedia]');
@@ -187,49 +190,45 @@
                     },
                 });
             });
-
         });
-
-        function deleteConfirmation(npm, judul) {
+         //DELETE
+         function deleteConfirmation(npm, judul) {
             swal.fire({
                 title: "Hapus?",
                 type: 'warning',
-                text: "Apakah anda yakin akan menghapus data buku dengan judul " + judul+"?!",
-                
+                text: "Apakah anda yakin akan menghapus data buku dengan judul " + judul + "?!",
                 showCancelButton: !0,
                 confirmButtonText: "Ya, lakukan!",
                 cancelButtonText: "Tidak, batalkan!",
                 reverseButtons: !0
-            }).then(function (e) {
-
+            }).then(function(e) {
                 if (e.value === true) {
                     var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
-
                     $.ajax({
                         type: 'POST',
-                        url: "{{url('/admin/book/delete/id')}}/" + npm,
-                        data: {_token: CSRF_TOKEN},
+                        url: "books/delete/" + npm,
+                        data: {
+                            _token: CSRF_TOKEN
+                        },
                         dataType: 'JSON',
-                        success: function (results) {
+                        success: function(results) {
                             if (results.success === true) {
                                 swal.fire("Done!", results.message, "success");
-                                setTimeout(function(){
+                                // refresh page after 2 seconds
+                                setTimeout(function() {
                                     location.reload();
-                                },1000);
+                                }, 1000);
                             } else {
-                                Swal.fire("Error!", results.message, "error");
+                                swal.fire("Error!", results.message, "error");
                             }
                         }
                     });
-
                 } else {
                     e.dismiss;
                 }
-
-            }, function (dismiss) {
+            }, function(dismiss) {
                 return false;
             })
         }
-
     </script>
 @stop
