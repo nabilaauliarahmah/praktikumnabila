@@ -59,8 +59,7 @@ class BookController extends Controller
             $extension = $req->file('cover')->extension();
             $filename = 'cover_buku_'.time().'.'.$extension;
             $req->file('cover')->storeAs(
-                'public/cover_buku',
-                $filename
+                'public/cover_buku', $filename
             );
             $validated['cover'] = $filename;
         }
@@ -68,7 +67,7 @@ class BookController extends Controller
         Storage::delete('public/cover_buku/' . $book->cover);
         $book->update($validated);
         return response()->json([
-            'message' => 'nuku berhasil diubah',
+            'message' => 'buku berhasil diubah',
             'book' => $book,
         ], 200);
     }
